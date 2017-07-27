@@ -1,0 +1,236 @@
+<form [@flyInOut]="'in'" #form="ngForm" (submit)="onNextPage(form.value)">
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        จังหวัด
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': changwatError }">
+        <label class="block clearfix">
+          <select class="form-control css-require"
+            [focus]="isFocus" 
+            name="Changwat"
+            (change)="changeChangwat(Changwat)"
+            [(ngModel)]="Changwat" 
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrChangwat" [value]="c.changwatcode">
+              {{ c.changwatname }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="changwatError">
+          {{ changwatError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        อำเภอ
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': ampurError }">
+        <label class="block clearfix">
+          <select class="form-control css-require" 
+            name="Ampur" 
+            (change)="changeAmpur(Ampur)"
+            [(ngModel)]="Ampur" 
+            [disabled]="!Changwat"
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrAmpur" [value]="c.ampurcode">
+              {{ c.ampurname }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="ampurError">
+          {{ ampurError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        ตำบล
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': tambonError }">
+        <label class="block clearfix">
+          <select class="form-control css-require" 
+            name="Tambon" 
+            (change)="changeTambon(Tambon)"
+            [(ngModel)]="Tambon" 
+            [disabled]="!Ampur"
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrTambon" [value]="c.tamboncode">
+              {{ c.tambonname }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="tambonError">
+          {{ tambonError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        สถานที่ปฏิบัติงาน
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': hospcodeError }">
+        <label class="block clearfix">
+          <select class="form-control css-require" 
+            name="Hospcode" 
+            (change)="changeHospcode(Hospcode)"
+            [(ngModel)]="Hospcode" 
+            [disabled]="!Tambon"
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrHospcode" [value]="c.hoscode">
+              {{ c.hosname }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="hospcodeError">
+          {{ hospcodeError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <!-- Open Workgroup -->
+  <div class="row" *ngIf="Hospcode=='00024'">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        กลุ่มงาน / งาน
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': workgroupError }">
+        <label class="block clearfix">
+          <select class="form-control css-require" 
+            name="Workgroup" 
+            (change)="changeWorkgroup(Workgroup)"
+            [(ngModel)]="Workgroup" 
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrWorkgroup" [value]="c.party_id">
+              {{ c.party_name }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="workgroupError">
+          {{ workgroupError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <!-- End Workgroup -->
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        สถานะ
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': typeprofileError }">
+        <label class="block clearfix">
+          <select class="form-control css-require" 
+            name="Typeprofile" 
+            (change)="changeTypeprofile(Typeprofile)"
+            [(ngModel)]="Typeprofile" 
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrTypeprofile" [value]="c.type_code">
+              {{ c.type_profile }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="typeprofileError">
+          {{ typeprofileError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        ตำแหน่ง
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': positionError }">
+        <label class="block clearfix">
+          <select class="form-control css-require" 
+            name="Position" 
+            (change)="changePosition(Position)"
+            [(ngModel)]="Position" 
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrPosition" [value]="c.id_position">
+              {{ c.position }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="positionError">
+          {{ positionError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <!-- Open Level -->
+  <div class="row" *ngIf="Typeprofile=='01'">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        ระดับขั้น
+      </label>
+      <span class="form-group" [ngClass]="{ 'has-error': levelError }">
+        <label class="block clearfix">
+          <select class="form-control css-require" 
+            name="Level" 
+            (change)="changeLevel(Level)"
+            [(ngModel)]="Level" 
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let c of arrLevel" [value]="c.level_code">
+              {{ c.level_name }}
+            </option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="levelError">
+          {{ levelError }}
+        </span>
+      </span>
+    </div>
+  </div>
+  <!-- End Level -->
+  <!-- Open Manage -->
+  <div class="row" *ngIf="Typeprofile=='01'">
+    <div class="form-group col-sm-12">
+      <label class="control-label">
+        ตำแหน่งบริหาร
+      </label>
+      <label class="block clearfix">
+        <select class="form-control css-require" 
+          name="Manage" 
+          [(ngModel)]="Manage" 
+        required>
+          <option *ngFor="let c of arrManage" [value]="c.manager_code">
+            {{ c.type_profile_full }}
+          </option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <!-- End Manage -->
+  <div class="toolbar clearfix">
+    <div>
+      <button type="button" class="width-45 pull-left btn btn-sm btn-success" (click)="onPreviousPage()">
+        <i class="ace-icon fa fa-arrow-left "></i>
+        <span class="bigger-110">ย้อนกลับ</span>
+      </button>
+    </div>
+    <div>
+      <button type="submit" class="width-45 pull-right btn btn-sm btn-primary">
+        <i class="ace-icon fa fa-floppy-o"></i>
+        <span class="bigger-110">บันทึกข้อมูล</span>
+      </button>
+    </div>
+  </div>
+  <div class="space-24"></div>
+</form>

@@ -1,0 +1,108 @@
+<form [@flyInOut]="'in'" #form="ngForm" (submit)="onNextPage(form.value)">
+  <div class="row">
+    <div class="form-group col-md-12">
+      <label class="control-label">
+        เลขประจำตัวประชาชน
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': cidError }">
+        <label class="block input-icon input-icon-right">
+          <input type="text"
+              class="form-control"
+              placeholder="เลขประจำตัวประชาชน"
+              [focus]="isFocus"
+              (focus)="cidError=undefined"
+              (blur)="checkCid(Cid)"
+              id="Cid"
+              name="Cid"
+              [(ngModel)]="Cid"
+              maxlength="17"
+              FormatCid="true"
+          required />
+          <i class="ace-icon fa fa-exclamation-circle" *ngIf="cidError"></i>
+        </label>
+        <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="cidError">
+          {{ cidError }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-12">
+      <label class="control-label">
+        สร้างบัญชีผู้ใช้
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': userError }">
+        <label class="block input-icon input-icon-right">
+          <input type="text"
+              class="form-control"
+              placeholder="ป้อนได้เฉพาะ a-z,A-Z และ 0-9 เท่านั้น"
+              (focus)="userError=undefined"
+              (blur)="checkUser(Username)"
+              id="Username"
+              name="Username"
+              [(ngModel)]="Username"
+          required />
+          <i class="ace-icon fa fa-exclamation-circle" *ngIf="userError"></i>
+        </label>
+        <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="userError" [innerHTML]="userError">
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-12">
+      <label class="control-label">
+        สร้างรหัสผ่าน
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': pass1Error }">
+        <label class="block input-icon input-icon-right">
+          <input type="password"
+              class="form-control"
+              placeholder="รหัสผ่าน 8 ตัวอักษรขึ้น"
+              (focus)="pass1Error=undefined"
+              (blur)="checkPass1(form.value)"
+              id="Password"
+              name="Password"
+              (ngModelChange)="changePass(form.value)"
+              [(ngModel)]="Password"
+          required />
+          <i class="ace-icon fa fa-exclamation-circle" *ngIf="pass1Error"></i>
+        </label>
+        <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="pass1Error">
+          {{ pass1Error }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-12">
+      <label class="control-label">
+        ยืนยันรหัสผ่าน
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': pass2Error }">
+        <label class="block input-icon input-icon-right">
+          <input type="password"
+              class="form-control"
+              placeholder="รหัสผ่าน 8 ตัวอักษรขึ้น"
+              (focus)="pass2Error=undefined"
+              (blur)="checkPass2(form.value)"
+              id="PasswordAgain"
+              name="PasswordAgain"
+              [(ngModel)]="PasswordAgain"
+          required />
+          <i class="ace-icon fa fa-exclamation-circle" *ngIf="pass2Error"></i>
+        </label>
+        <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="pass2Error">
+          {{ pass2Error }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix">
+    <button type="submit" class="width-100 pull-right btn btn-sm btn-primary">
+          <span class="bigger-110">ขั้นตอนต่อไป</span>
+          <i class="ace-icon fa fa-arrow-right "></i>
+      </button>
+  </div>
+  <div class="space-24"></div>
+</form>

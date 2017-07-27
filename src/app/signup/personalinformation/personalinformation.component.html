@@ -1,0 +1,202 @@
+<form [@flyInOut]="'in'" #form="ngForm" (submit)="onNextPage(form.value, birth.value)">
+  <div class="row">
+    <div class="col-sm-12">
+      <label class="control-label">
+        คำนำหน้าชื่อ
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': pnameError }">
+        <label class="block clearfix">
+          <select
+            [focus]="isFocus" 
+            class="form-control" 
+            name="Prename"
+            #pname
+            (focus)="pnameError=undefined"
+            (blur)="checkPname(pname.value)"
+            [(ngModel)]="Prename" 
+          required>
+            <option value=""> -- เลือก -- </option>
+            <option *ngFor="let p of arrPrename" [value]="p.id_prename">{{ p.prename }}</option>
+          </select>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="pnameError">
+          {{ pnameError }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6 col-sm-6">
+      <label class="control-label">
+        ชื่อ
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': fnameError }">
+        <label class="block clearfix">
+          <input type="text"
+              class="form-control"
+              placeholder="ชื่อ"
+              id="FristName"
+              name="FristName"
+              (focus)="fnameError=undefined"
+              (blur)="checkFname(FristName)"
+              [(ngModel)]="FristName"
+          required>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="fnameError">
+          {{ fnameError }}
+        </span>
+      </div>
+    </div>
+    <div class="col-xs-6 col-sm-6">
+      <label class="control-label">
+        นามสกุล
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': lnameError }">
+        <label class="block clearfix">
+          <input type="text"
+              class="form-control"
+              placeholder="นามสกุล"
+              id="LastName"
+              name="LastName"
+              (focus)="lnameError=undefined"
+              (blur)="checkLname(LastName)"
+              [(ngModel)]="LastName"
+          required>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="lnameError">
+          {{ lnameError }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label class="control-label">
+        วัน/เดือน/ปี เกิด (พ.ศ.)
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': birthError }">
+        <label class="block clearfix">
+          <div class="input-group date date-picker" id="date-picker">
+            <input type="text"
+              id="BirthDay"
+              name="BirthDay"
+              #birth
+              class="form-control"
+              [(ngModel)]="BirthDay"
+              placeholder="วว-ดด-ปปปป"
+            disabled>
+            <span class="input-group-addon" (click)="birthError=undefined">
+              <i class="fa fa-calendar bigger-110"></i>
+            </span>
+          </div>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="birthError">
+          {{ birthError }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-12">
+      <label class="control-label">
+        เพศ
+      </label>
+      <label class="block clearfix" [ngClass]="{ 'has-error': sexError }">
+        <div class="form-control">
+          <label>
+            <input type="radio"
+              id="Sex"
+              name="Sex"
+              value="1"
+              (change)="checkSex(Sex)"
+              [(ngModel)]="Sex"
+            required>
+            ชาย
+          </label> &nbsp;
+      <label>
+            <input type="radio"
+              id="Sex"
+              name="Sex"
+              value="2"
+              (change)="checkSex(Sex)"
+              [(ngModel)]="Sex"
+            required>
+            หญิง
+          </label>
+    </div>
+    <span class="help-block col-sm-reset inline" *ngIf="sexError">
+      {{ sexError }}
+    </span>
+    </label>
+  </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label class="control-label">
+        โทรศัพท์มือถือ
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': telError }">
+        <label class="block clearfix">
+          <span class="block input-icon input-icon-left">
+            <input type="text"
+                class="form-control"
+                placeholder="เบอร์โทรศัพท์มือถือ"
+                id="Tel"
+                name="Tel"
+                (focus)="telError=undefined"
+                (blur)="checkTel(Tel)"
+                [(ngModel)]="Tel"
+                maxlength="11"
+                FormatTel="true"
+            required />
+            <i class="ace-icon fa fa-phone-square"></i>
+          </span>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="telError">
+          {{ telError }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <label class="control-label">
+        อีเมล์
+      </label>
+      <div class="form-group" [ngClass]="{ 'has-error': emailError }">
+        <label class="block clearfix">
+          <span class="block input-icon input-icon-left">
+            <input type="text"
+                class="form-control"
+                placeholder="อีเมล์"
+                id="Email"
+                name="Email"
+                (focus)="emailError=undefined"
+                (blur)="checkEmail(Email)"
+                [(ngModel)]="Email"
+            required />
+            <i class="ace-icon fa fa-envelope"></i>
+          </span>
+        </label>
+        <span class="help-block col-sm-reset inline" *ngIf="emailError">
+          {{ emailError }}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="toolbar clearfix">
+    <div>
+      <button type="button" class="width-45 pull-left btn btn-sm btn-success" (click)="onPreviousPage()">
+        <i class="ace-icon fa fa-arrow-left "></i>
+        <span class="bigger-110">ย้อนกลับ</span>
+      </button>
+    </div>
+    <div>
+      <button type="submit" class="width-45 pull-right btn btn-sm btn-primary">
+        <span class="bigger-110">ขั้นตอนต่อไป</span>
+        <i class="ace-icon fa fa-arrow-right "></i>
+      </button>
+    </div>
+  </div>
+  <div class="space-24"></div>
+</form>
