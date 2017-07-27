@@ -76,7 +76,7 @@ export class ForgotComponent implements OnInit {
 
   sweetAlert(txt: string, id: number) {
     let router = this.router;
-    if (id===1) {
+    if (id==1) {
       swal({
         title: 'ยินดีด้วยด้วย!',
         text: `เราได้ทำการส่งคำขอรีเซ็ตรหัสผ่านของคุณ 
