@@ -13,6 +13,19 @@ export class MainService {
     @Inject('API_URL') private url: string
   ) { }
 
+  postSendMaul(objData: object) {
+    return new Promise((resolve, reject) => {
+      let url = `http://203.157.182.15/api/sendMail`;
+      this.http.post(url, objData)
+        .map(res => res.json())
+        .subscribe(data => {
+          resolve(data);
+        }, error => {
+          reject(error);
+        })
+    });
+  }
+
   postEncript(path: string, objData: string) {
     return new Promise((resolve, reject) => {
       let url = `${this.url}/${path}`;

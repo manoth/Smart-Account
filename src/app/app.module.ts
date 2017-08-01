@@ -28,6 +28,7 @@ import { ForgotComponent } from './forgot/forgot.component';
 
 import { FormatCidDirective } from './directive/format-cid.directive';
 import { FormatTelDirective } from './directive/format-tel.directive';
+import { NewpasswordComponent } from './newpassword/newpassword.component';
 
 
 export function getAuthHttp(http) {
@@ -48,7 +49,8 @@ export function getAuthHttp(http) {
     WorkplaceinformationComponent,
     FormatCidDirective,
     FormatTelDirective,
-    ForgotComponent
+    ForgotComponent,
+    NewpasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -63,6 +65,7 @@ export function getAuthHttp(http) {
       { path: 'signin', component: SigninComponent, data: { pageHeader: 'ลงชื่อเข้าใช้ด้วยบัญชีของคุณ' } },
       { path: 'signup', component: SignupComponent, data: { pageHeader: 'สร้างบัญชีเพื่อเข้าใช้งานระบบ' } },
       { path: 'forgot', component: ForgotComponent, data: { pageHeader: 'ลืมรหัสผ่านในการเข้าใช้งาน' } },
+      { path: 'newpassword', component: NewpasswordComponent, data: { pageHeader: 'ตั้งรหัสผ่านใหม่' } },
       { path: '**', redirectTo: 'signin', pathMatch: 'full' }   
     ], { useHash: false }),
     FocusModule.forRoot()

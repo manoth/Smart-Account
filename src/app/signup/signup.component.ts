@@ -41,6 +41,7 @@ export class SignupComponent implements OnInit {
     { name: 'ข้อมูลส่วนตัว', icon: 'fa-user', color: 'green' },
     { name: 'สถานที่ปฏิบัติงานจริง', icon: 'fa-home', color: 'red' }
   ];
+  arrSysten: any[];
   signupPage: number = 1;
   dataFormPage: object;
   buttonLogout: boolean = false;
@@ -65,7 +66,15 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+    this.otherService.addSession();
+    this.otherService.checkClientId()
+      .then((data: any) => {
+        let system = data.data;
+        this.arrSysten = JSON.parse(this.encryptService.decrypt(system));
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
   }
 
   logout() {

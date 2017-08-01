@@ -34,6 +34,7 @@ import { OtherService } from '../service/other/other.service';
 })
 export class ForgotComponent implements OnInit {
 
+  arrSysten: any[];
   isFocused: boolean = true;
   hasErrorCid: string;
   Cid: string;
@@ -41,10 +42,20 @@ export class ForgotComponent implements OnInit {
   constructor(
     private mainService: MainService,
     private encryptService: EncryptService,
+    private otherService: OtherService,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.otherService.addSession();
+    this.otherService.checkClientId()
+      .then((data: any) => {
+        let system = data.data;
+        this.arrSysten = JSON.parse(this.encryptService.decrypt(system));
+      })
+      .catch((error: any) => {
+        console.log(error);
+      });
   }
 
   submitForgot(form) {
@@ -57,13 +68,16 @@ export class ForgotComponent implements OnInit {
 
   onCid(cid) {
     document.getElementById('Cid').focus();
-    let objData = { username: cid };
-    let encData = this.encryptService.encrypt(JSON.stringify(objData));
-    let path = 'signin/username';
-    this.mainService.postEncript(path, encData)
+    let objData = {
+      cid: cid,
+      followup: sessionStorage.followup,
+      cli: sessionStorage.cli
+    };
+    this.mainService.postSendMaul(objData)
       .then((data: any) => {
+        console.log(data);
         if (data.ok) {
-          this.sweetAlert(cid,1);
+          this.sweetAlert(data.email,1);
         } else {
           this.sweetAlert(cid,2);
           this.Cid = null;
@@ -80,7 +94,7 @@ export class ForgotComponent implements OnInit {
       swal({
         title: 'ยินดีด้วยด้วย!',
         text: `เราได้ทำการส่งคำขอรีเซ็ตรหัสผ่านของคุณ 
-          ไปยัง ${txt} เรียบร้อยแล้ว. 
+          ไปยัง ${txt} เรียบร้อยแล้ว. \n
           หากต้องการเปลี่ยนที่อยู่ Email ใหม่
           กรุณาติดต่อ 044-836826 ต่อ 206.`,
         type: 'success',
@@ -94,7 +108,7 @@ export class ForgotComponent implements OnInit {
         title: 'เสียใจด้วย!',
         text: `หมายเลขประจำตัวประชาชน ${txt}
           นี้ยังไม่เคยลงทะเบียนเข้าใช้งานระบบ 
-          Smart Account นี้มาก่อน 
+          Smart Account นี้มาก่อน \n
           คุณต้องการที่จะลงทะเบียนเข้าใช้งานใหม่หรือไม่ ?`,
         type: 'warning',
         showCancelButton: true,
