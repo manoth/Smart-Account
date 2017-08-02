@@ -4,11 +4,14 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
+import { JwtHelper } from 'angular2-jwt';
 import { CookieService } from 'ngx-cookie-service';
 import { isWebUri } from 'valid-url';
 
 @Injectable()
 export class OtherService {
+
+  jwtHelper: JwtHelper = new JwtHelper();
 
   constructor(
     private http: Http,
@@ -23,8 +26,13 @@ export class OtherService {
     let localToken = localStorage.getItem('token');
     let cookieToken = this.cookieService.get('tokrn');
     if (localToken || cookieToken) {
+      this.jwtHelper.isTokenExpired(localToken);
+      this.jwtHelper.decodeToken(localToken);
       this.router.navigate(['/profile'], { queryParams: { flowEntry: 'ServiceProfile' } });
       return true;
+    } else {
+      this.logout();
+      return false;
     }
   }
 
@@ -64,6 +72,11 @@ export class OtherService {
           window.location.href = this.mainUrl;
         })
     });
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.cookieService.delete('token');
   }
 
 }

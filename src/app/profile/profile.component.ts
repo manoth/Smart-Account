@@ -27,13 +27,6 @@ export class ProfileComponent implements OnInit {
     private otherService: OtherService
   ) { 
     if (!this.otherService.checkToken()) {
-      this.router.navigate(['/signin'], { queryParams: { flowEntry: 'ServiceLogin' } });
-    }
-    try {
-      let token = localStorage.getItem('token');
-      console.log(this.jwtHelper.isTokenExpired(token));
-      console.log(this.jwtHelper.decodeToken(token));
-    } catch (error) {
       this.logout();
     }
   }
@@ -42,8 +35,7 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    this.cookieService.delete('token');
+    this.otherService.logout();
     this.buttonLogout = false;
     this.router.navigate(['/signin'], { queryParams: { flowEntry: 'ServiceLogin' } });
   }

@@ -57,13 +57,6 @@ export class SigninComponent implements OnInit {
     private otherService: OtherService
   ) {
     this.otherService.checkToken();
-    try {
-      let token = localStorage.getItem('token');
-      console.log(this.jwtHelper.isTokenExpired(token));
-      console.log(this.jwtHelper.decodeToken(token));
-    } catch (error) {
-      this.logout();
-    }
   }
 
   ngOnInit() {
@@ -166,11 +159,6 @@ export class SigninComponent implements OnInit {
     this.hasErrorPass = undefined;
     this.username = null;
     this.password = null;
-  }
-
-  logout() {
-    localStorage.removeItem('token');
-    this.cookieService.delete('token');
   }
 
 }

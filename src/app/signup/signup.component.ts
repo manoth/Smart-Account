@@ -56,14 +56,6 @@ export class SignupComponent implements OnInit {
   ) {
     if (!this.otherService.checkToken()) {
       this.router.navigate(['/signup'], { queryParams: { 'flowEntry': 'ServiceRegister' } });
-    }  
-    try {
-      let token = localStorage.getItem('token');
-      this.buttonLogout = true;
-      console.log(this.jwtHelper.isTokenExpired(token));
-      console.log(this.jwtHelper.decodeToken(token));
-    } catch (error) {
-      this.logout();
     }
   }
 
@@ -77,11 +69,6 @@ export class SignupComponent implements OnInit {
       .catch((error: any) => {
         console.log(error);
       });
-  }
-
-  logout() {
-    localStorage.removeItem('token');
-    this.buttonLogout = false;
   }
 
   newPage(e) {
