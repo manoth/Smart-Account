@@ -43,7 +43,6 @@ export class NewpasswordComponent implements OnInit {
   Username: string;
   Password: string;
   PasswordAgain: string;
-
   token: string;
 
   constructor(
@@ -52,7 +51,9 @@ export class NewpasswordComponent implements OnInit {
     private otherService: OtherService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) { 
+    this.otherService.checkToken();
+  }
 
   ngOnInit() {
     let token = this.route.snapshot.queryParams['token'];
@@ -80,7 +81,30 @@ export class NewpasswordComponent implements OnInit {
     let Password = this.checkPass1(form);
     let PasswordAgain = this.checkPass2(form);
     if (Password && PasswordAgain) {
-      console.log(form);
+      let path = 'forgot/newpassword';
+      let objData = {
+        token: this.token,
+        cid: this.Cid,
+        password: form.Password
+      };
+      let encData = this.encryptService.encrypt(JSON.stringify(objData));
+      this.mainService.postEncript(path, encData)
+        .then((res: any) => {
+          if (res.ok) {
+            let router = this.router;
+            swal({
+              title: 'ยินดีด้วย!',
+              text: 'คุณบันทึกรหัสผ่านใหม่ สำเร็จแล้ว',
+              type: 'success',
+              allowOutsideClick: false
+            }).then(function () {
+              localStorage.removeItem('ACCOUNT');
+              router.navigate(['/signin'], { queryParams: { 'flowEntry': 'ServiceLogin' } });
+            });
+          }
+        }).catch((err: any) => {
+          console.log(err);
+        });
     }
   }
 
@@ -128,7 +152,11 @@ export class NewpasswordComponent implements OnInit {
     this.mainService.postEncript(path, encData)
       .then((res: any) => {
         if (!res.ok) {
-          this.sweetAlert(res.data);
+          if (res.data) {
+            this.sweetAlert(res.data);
+          } else {
+            this.router.navigate(['/signin'], { queryParams: { 'flowEntry': 'ServiceLogin' } });
+          }
         } else {
           this.Cid = res.rows.CID;
           this.Username = res.rows.USERNAME;

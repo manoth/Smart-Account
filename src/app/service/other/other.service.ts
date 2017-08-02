@@ -1,9 +1,10 @@
 import { Injectable, Inject } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
+import { CookieService } from 'ngx-cookie-service';
 import { isWebUri } from 'valid-url';
 
 @Injectable()
@@ -13,8 +14,19 @@ export class OtherService {
     private http: Http,
     @Inject('API_URL') private url: string,
     @Inject('MAIN_URL') private mainUrl: string,
-    private route: ActivatedRoute
+    private router: Router,
+    private route: ActivatedRoute,
+    private cookieService: CookieService
   ) { }
+
+  checkToken() {
+    let localToken = localStorage.getItem('token');
+    let cookieToken = this.cookieService.get('tokrn');
+    if (localToken || cookieToken) {
+      this.router.navigate(['/profile'], { queryParams: { flowEntry: 'ServiceProfile' } });
+      return true;
+    }
+  }
 
   addSession() {
     let followup = this.route.snapshot.queryParams['followup'];

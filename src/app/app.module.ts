@@ -14,6 +14,7 @@ import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import { RouterModule } from '@angular/router';
 
 // Service
+import { CookieService } from 'ngx-cookie-service';
 import { MainService } from './service/main/main.service';
 import { EncryptService } from './service/encript/encript.service';
 import { OtherService } from './service/other/other.service';
@@ -29,13 +30,16 @@ import { ForgotComponent } from './forgot/forgot.component';
 import { FormatCidDirective } from './directive/format-cid.directive';
 import { FormatTelDirective } from './directive/format-tel.directive';
 import { NewpasswordComponent } from './newpassword/newpassword.component';
+import { LogoComponent } from './share/logo/logo.component';
+import { FooterComponent } from './share/footer/footer.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 export function getAuthHttp(http) {
   return new AuthHttp(new AuthConfig({
     noJwtError: true,
     globalHeaders: [{ 'Accept': 'application/json' }],
-    tokenGetter: (() => localStorage.getItem('token')),
+    tokenGetter: (() => localStorage.getItem('token'))
   }), http);
 }
 
@@ -50,7 +54,10 @@ export function getAuthHttp(http) {
     FormatCidDirective,
     FormatTelDirective,
     ForgotComponent,
-    NewpasswordComponent
+    NewpasswordComponent,
+    LogoComponent,
+    FooterComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -66,12 +73,14 @@ export function getAuthHttp(http) {
       { path: 'signup', component: SignupComponent, data: { pageHeader: 'สร้างบัญชีเพื่อเข้าใช้งานระบบ' } },
       { path: 'forgot', component: ForgotComponent, data: { pageHeader: 'ลืมรหัสผ่านในการเข้าใช้งาน' } },
       { path: 'newpassword', component: NewpasswordComponent, data: { pageHeader: 'ตั้งรหัสผ่านใหม่' } },
+      { path: 'profile', component: ProfileComponent, data: { pageHeader: 'ข้อมูลส่วนตัว' } },
       { path: '**', redirectTo: 'signin', pathMatch: 'full' }   
     ], { useHash: false }),
     FocusModule.forRoot()
   ],
   providers: [
     Title,
+    CookieService,
     { provide: 'API_URL', useValue: 'http://127.0.0.1:3000' },
     { provide: 'MAIN_URL', useValue: 'http://cpho.moph.go.th' },
     { provide: AuthHttp, useFactory: getAuthHttp, deps: [Http] },

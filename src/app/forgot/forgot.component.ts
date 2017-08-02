@@ -36,6 +36,7 @@ export class ForgotComponent implements OnInit {
 
   arrSysten: any[];
   isFocused: boolean = true;
+  loading: boolean = false;
   hasErrorCid: string;
   Cid: string;
 
@@ -44,7 +45,9 @@ export class ForgotComponent implements OnInit {
     private encryptService: EncryptService,
     private otherService: OtherService,
     private router: Router
-  ) { }
+  ) {
+    this.otherService.checkToken();
+   }
 
   ngOnInit() {
     this.otherService.addSession();
@@ -60,6 +63,7 @@ export class ForgotComponent implements OnInit {
 
   submitForgot(form) {
     if (form.Cid) {
+      this.loading = true;
       this.onCid(form.Cid);
     } else {
       this.hasErrorCid = '*กรุณาป้อนเลขประจำตัวประชาชน!';
@@ -68,14 +72,16 @@ export class ForgotComponent implements OnInit {
 
   onCid(cid) {
     document.getElementById('Cid').focus();
+    let path = 'forgot/sendmail';
     let objData = {
       cid: cid,
       followup: sessionStorage.followup,
       cli: sessionStorage.cli
     };
-    this.mainService.postSendMaul(objData)
+    let encData = this.encryptService.encrypt(JSON.stringify(objData));
+    this.mainService.postEncript(path, encData)
       .then((data: any) => {
-        console.log(data);
+        this.loading = false;
         if (data.ok) {
           this.sweetAlert(data.email,1);
         } else {
@@ -90,12 +96,13 @@ export class ForgotComponent implements OnInit {
 
   sweetAlert(txt: string, id: number) {
     let router = this.router;
-    if (id==1) {
+    if (id===1) {
       swal({
         title: 'ยินดีด้วยด้วย!',
         text: `เราได้ทำการส่งคำขอรีเซ็ตรหัสผ่านของคุณ 
           ไปยัง ${txt} เรียบร้อยแล้ว. \n
-          หากต้องการเปลี่ยนที่อยู่ Email ใหม่
+          กรุณาไปเปิด E-mail ของคุณ \n 
+          หากต้องการเปลี่ยนที่อยู่ Email ใหม่ \n
           กรุณาติดต่อ 044-836826 ต่อ 206.`,
         type: 'success',
         confirmButtonText: 'ตกลง',

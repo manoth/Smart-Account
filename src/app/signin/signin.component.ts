@@ -4,6 +4,7 @@ import { JwtHelper } from 'angular2-jwt';
 import { isWebUri } from 'valid-url';
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
 
+import { CookieService } from 'ngx-cookie-service';
 import { MainService } from '../service/main/main.service';
 import { EncryptService } from '../service/encript/encript.service';
 import { OtherService } from '../service/other/other.service';
@@ -44,21 +45,20 @@ export class SigninComponent implements OnInit {
   hasErrorUser: string;
   hasErrorPass: string;
 
-  buttonLogout: boolean = false;
-
   jwtHelper: JwtHelper = new JwtHelper();
 
   constructor(
     @Inject('MAIN_URL') private mainUrl: string,
     private router: Router,
     private route: ActivatedRoute,
+    private cookieService: CookieService,
     private mainService: MainService,
     private encryptService: EncryptService,
     private otherService: OtherService
   ) {
+    this.otherService.checkToken();
     try {
       let token = localStorage.getItem('token');
-      this.buttonLogout = true;
       console.log(this.jwtHelper.isTokenExpired(token));
       console.log(this.jwtHelper.decodeToken(token));
     } catch (error) {
@@ -142,11 +142,13 @@ export class SigninComponent implements OnInit {
       .then((res: any) => {
         if (res.ok) {
           let token = res.token;
-          let decoded = this.jwtHelper.decodeToken(token);
-          localStorage.setItem('token', token);
-          
-          // button logout
-          this.buttonLogout = true;
+          // if (remember) {
+            localStorage.setItem('token', token);
+          // } else {
+          //   this.cookieService.set('token', token);
+          // }
+          this.otherService.checkToken();
+          // let decoded = this.jwtHelper.decodeToken(token);
         } else {
           this.password = null;
           this.hasErrorPass = res.data;
@@ -168,7 +170,7 @@ export class SigninComponent implements OnInit {
 
   logout() {
     localStorage.removeItem('token');
-    this.buttonLogout = false;
+    this.cookieService.delete('token');
   }
 
 }

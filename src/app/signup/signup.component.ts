@@ -54,7 +54,9 @@ export class SignupComponent implements OnInit {
     private encryptService: EncryptService,
     private otherService: OtherService
   ) {
-    this.router.navigate(['/signup'], { queryParams: { 'flowEntry': 'ServiceRegister' } });
+    if (!this.otherService.checkToken()) {
+      this.router.navigate(['/signup'], { queryParams: { 'flowEntry': 'ServiceRegister' } });
+    }  
     try {
       let token = localStorage.getItem('token');
       this.buttonLogout = true;
