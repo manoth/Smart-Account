@@ -1,10 +1,456 @@
-<p class="center">
-  profile works!
-  <!-- logout -->
-  <label *ngIf="buttonLogout">
-    <a href="javascript:void(0)" (click)="logout()" class="user-signup-link blue">
-        ออกจากระบบ
-    </a>
-  </label>
-  <!-- logout -->
-</p>
+<!-- <div class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 class="blue">เปลี่ยนรูป ประจำตัว</h3>
+      </div>
+
+      <form class="no-margin">
+        <div class="modal-body">
+          <div class="space-4"></div>
+          <div style="width:75%;margin-left:12%;"><input type="file" name="image" /></div>
+        </div>
+
+        <div class="modal-footer center">
+          <button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i> บันทึก</button>
+          <button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> ยกเลิก</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> -->
+
+<div style="margin:50px; padding:10px 40px 40px 40px;" *ngIf="loadingPage">
+  <div class="main-container">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="page-header">
+          <h1>
+            ข้อมูลส่วนตัว
+            <small>
+              <i class="ace-icon fa fa-angle-double-right"></i>
+              คุณสามารถแก้ไขข้อมูลส่วนตัวบางส่วนของคุณได้
+            </small>
+          </h1>
+        </div><!-- /.page-header -->
+
+        <div class="row">
+          <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="clearfix"></div>
+            <!-- <div class="hr dotted"></div> -->
+            <div>
+              <div id="user-profile-1" class="user-profile row">
+                <div class="col-xs-12 col-sm-3 center">
+                  <div>
+                    <a  class='tooltip-warning' data-title="คลิกเพื่อเปลี่ยนรูปโปรไฟล์">
+                      <span class="profile-picture">
+                          <img id="avatar" [src]="profile.IMAGE" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" style="display: block; height: 200px;">
+                      </span>
+                    </a>
+                    <div class="space-4"></div>
+                    <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
+                      <div class="inline position-relative">
+                        <a href="javascript:void(0)" class="user-title-label dropdown-toggle" data-toggle="dropdown">
+                          <i class="ace-icon fa fa-circle light-green"></i>
+                          &nbsp;
+                          <span class="white"> K. {{ profile.NAME }} </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="space-6"></div>
+                  <div class="profile-contact-info">
+                    <div class="profile-contact-links align-left">
+                      <a href="tel:{{ profile.TELEPHONE_NUMBER }}" class="btn btn-link">
+                        <i class="ace-icon fa fa-phone-square bigger-120 green"></i>
+                        {{ profile.TELEPHONE_NUMBER }}
+                      </a>
+                      <a href="mailto:{{ profile.EMAIL }}" class="btn btn-link">
+                        <i class="ace-icon fa fa-envelope bigger-120 pink"></i>
+                        {{ profile.EMAIL }}
+                      </a>
+                    </div>
+                    <div class="space-6"></div>
+                  </div>
+                  <label *ngIf="buttonLogout">
+                    <a href="javascript:void(0)" (click)="logout()" class="user-signup-link blue">
+                        ออกจากระบบ
+                    </a>
+                  </label>
+                  <div class="hr hr12 dotted"></div>
+                  <div class="clearfix">
+                    <div class="grid2">
+                      <span class="bigger-175 blue">0</span>
+                      <br />
+                      Followers
+                    </div>
+                    <div class="grid2">
+                      <span class="bigger-175 blue">0</span>
+                      <br />
+                      Following
+                    </div>
+                  </div>
+                  <div class="hr hr16 dotted"></div>
+                </div>
+
+                <div class="col-xs-12 col-sm-9">
+                  <div class="space-12"></div>
+                  <div class="col-xs-12 col-sm-12" style="text-align: right;">
+                  </div>
+                  <div class="profile-user-info profile-user-info-striped">
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> เลข 13 หลัก </div>
+                      <div class="profile-info-value">
+                        <span class="editable"> {{ profile.CID }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> บัญผู้ใช้ </div>
+                      <div class="profile-info-value">
+                        <span class="editable" *ngIf="!editUser"> 
+                          {{ profile.USERNAME }} 
+                          <a href="javascript:void(0)" (click)="editUser=!editUser" title="" class="tooltip-info" data-title="คลิกเพื่อแก้ไขเบอร์โทรศัพท์มือถือ" data-target="#tel-span">
+                            <i class="ace-icon fa fa-pencil-square-o blue bigger-90"></i>
+                          </a>
+                        </span>
+                        <span class="editable-container editable-inline" id="tel-span" *ngIf="editUser">
+                          <form #form="ngForm" (submit)="submitUser(form.value)" class="form-inline editableform">
+                            <div class="control-group form-group">
+                              <div>
+                                <div [ngClass]="{ 'has-error': userError }" class="editable-input form-add form-group has-feedback">
+                                  <input type="text" 
+                                    class="form-control css-require input-sm" 
+                                    placeholder="บัญผู้ใช้" 
+                                    id="Username" 
+                                    name="Username"
+                                    (focus)="userError=undefined"
+                                    (blur)="checkUser(Username)"
+                                    [focus]="isFocused"
+                                    [(ngModel)]="Username"
+                                  required />
+                                  <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="userError" [innerHTML]="userError"></span> 
+                                </div>
+                                <p></p>
+                                <div class="editable-buttons">
+                                  <button type="submit" class="btn btn-info editable-submit">
+                                    <i class="ace-icon fa fa-check"></i>
+                                  </button>
+                                  <button (click)="clickEditUser()" type="button" class="btn editable-cancel">
+                                    <i class="ace-icon fa fa-times"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> รหัสผ่าน </div>
+                      <div class="profile-info-value">
+                        <span class="editable action-buttons" *ngIf="!editPassword">
+                          {{ profile.PASSWORD }}
+                          <a href="javascript:void(0)" (click)="resetBlockPass()" title="" class='tooltip-info' data-title="คลิกเพื่อแก้ไขรหัสผ่าน" data-target="#passwd-span">
+                            <i class="ace-icon fa fa-pencil-square-o blue bigger-90"></i>
+                          </a>
+                        </span>
+                         <span class="editable-container editable-inline" id="passwd-span" *ngIf="editPassword">
+                          <form #form="ngForm" (submit)="submitNewPass(form.value)" class="form-inline editableform">
+                            <div class="control-group form-group">
+                              <div>
+                                <div [ngClass]="{ 'has-error': oldPassError }" class="editable-input form-add form-group has-feedback">
+                                  <input type="password" 
+                                    class="form-control css-require input-sm" 
+                                    placeholder="รหัสผ่านเก่า" 
+                                    id="Oldpassword" 
+                                    name="Oldpassword"
+                                    (focus)="oldPassError=undefined"
+                                    (blur)="checkOldpass(Oldpassword)"
+                                    [focus]="isFocused"
+                                    [(ngModel)]="Oldpassword"
+                                  required />
+                                  <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="oldPassError">
+                                    {{ oldPassError }}
+                                  </span>
+                                </div>
+                                <br>
+                                <div class="hr hr2 hr-double col-xs-6 col-sm-5 col-md-4"></div>
+                                <br>
+                                <div [ngClass]="{ 'has-error': newPass1Error }" class="editable-input form-add form-group has-feedback">
+                                  <input type="password" 
+                                    class="form-control css-require input-sm" 
+                                    placeholder="รหัสผ่านใหม่ 8 ตัวอักษรขึ้น" 
+                                    id="Newpassword" 
+                                    name="Newpassword"
+                                    (focus)="newPass1Error=undefined"
+                                    (blur)="checkPass1(form.value)"
+                                    [(ngModel)]="Newpassword"
+                                    (ngModelChange)="changePass(form.value)"
+                                  required />
+                                  <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="newPass1Error">
+                                    {{ newPass1Error }}
+                                  </span>
+                                </div>
+                                <p></p>
+                                <div [ngClass]="{ 'has-error': newPass2Error }" class="editable-input form-add form-group has-feedback">
+                                  <input type="password"
+                                    class="form-control css-require input-sm" 
+                                    placeholder="ยืนยันรหัสผ่าน 8 ตัวอักษรขึ้น" 
+                                    id="reNewpassword" 
+                                    name="reNewpassword"
+                                    (focus)="newPass2Error=undefined"
+                                    (blur)="checkPass2(form.value)"
+                                    [(ngModel)]="reNewpassword"
+                                  required />
+                                  <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="newPass2Error">
+                                    {{ newPass2Error }}
+                                  </span>
+                                </div>
+                                <p></p>
+                                <div class="editable-buttons">
+                                  <button type="submit" class="btn btn-info editable-submit">
+                                    <i class="ace-icon fa fa-check"></i>
+                                  </button>
+                                  <button (click)="editPassword=!editPassword" type="button" class="btn editable-cancel">
+                                    <i class="ace-icon fa fa-times"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </span> 
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> นามแฝง </div>
+                      <div class="profile-info-value">
+                        <span class="editable action-buttons" *ngIf="!editName">
+                          {{ profile.NAME }}
+                          <a href="javascript:void(0)" (click)="editName=!editName" title="" class="tooltip-info" data-title="คลิกเพื่อแก้ไขนามแฝง" data-target="#name-span">
+                            <i class="ace-icon fa fa-pencil-square-o blue bigger-90"></i>
+                          </a>
+                        </span>
+                         <span *ngIf="editName" class="editable-container editable-inline" id="name-span">
+                          <form #form="ngForm" (submit)="submitName(form.value)" class="form-inline editableform">
+                            <div class="control-group form-group">
+                              <div>
+                                <div [ngClass]="{ 'has-error': nameError }" class="editable-input form-add form-group has-feedback">
+                                  <input type="text" 
+                                    class="form-control css-require input-sm" 
+                                    placeholder="นามแฝง" 
+                                    id="Name" 
+                                    name="Name"
+                                    (focus)="nameError=undefined"
+                                    (blur)="checkName(Name)"
+                                    [focus]="isFocused"
+                                    [(ngModel)]="Name"
+                                  required />
+                                  <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="nameError">
+                                    {{ nameError }}
+                                  </span>
+                                </div>
+                                <p></p>
+                                <div class="editable-buttons">
+                                  <button type="submit" class="btn btn-info editable-submit">
+                                    <i class="ace-icon fa fa-check"></i>
+                                  </button>
+                                  <button (click)="clickEditName()" type="button" class="btn editable-cancel">
+                                    <i class="ace-icon fa fa-times"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </span> 
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> ชื่อ - สกุล จริง </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="signup"> 
+                          {{ profile.PRENAME }}{{ profile.FIRSTNAME }} 
+                          {{ profile.LASTNAME }} 
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> เพศ </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="age"> {{ profile.SEX }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> วัน/เดือน/ปี เกิด </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="age"> {{ datePipeTh.transform(profile.BIRTHDAY, 'dd MMMM yyyy') }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> อายุ </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="age"> {{ profile.AGE }} ปี </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> เบอร์มือถือ </div>
+                      <div class="profile-info-value">
+                        <span class="editable action-buttons" *ngIf="!editTel">
+                          {{ profile.TELEPHONE_NUMBER }}
+                          <a href="javascript:void(0)" (click)="editTel=!editTel" title="" class="tooltip-info" data-title="คลิกเพื่อแก้ไขเบอร์โทรศัพท์มือถือ" data-target="#tel-span">
+                            <i class="ace-icon fa fa-pencil-square-o blue bigger-90"></i>
+                          </a>
+                        </span>
+                         <span class="editable-container editable-inline" id="tel-span" *ngIf="editTel">
+                          <form #form="ngForm" (submit)="submitTel(form.value)" class="form-inline editableform">
+                            <div class="control-group form-group">
+                              <div>
+                                <div [ngClass]="{ 'has-error': telError }" class="editable-input form-add form-group has-feedback">
+                                  <input type="text" 
+                                    class="form-control css-require input-sm" 
+                                    placeholder="หมายเลขโทรศัพท์มือถือ" 
+                                    id="Tel" 
+                                    name="Tel"
+                                    (focus)="telError=undefined"
+                                    (blur)="checkTel(Tel)"
+                                    [focus]="isFocused"
+                                    [(ngModel)]="Tel"
+                                    maxlength="11"
+                                    FormatTel="true"
+                                  required />
+                                  <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="telError">
+                                    {{ telError }}
+                                  </span> 
+                                </div>
+                                <p></p>
+                                <div class="editable-buttons">
+                                  <button type="submit" class="btn btn-info editable-submit">
+                                    <i class="ace-icon fa fa-check"></i>
+                                  </button>
+                                  <button (click)="clickEditTel()" type="button" class="btn editable-cancel">
+                                    <i class="ace-icon fa fa-times"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </span> 
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> Email Address </div>
+                      <div class="profile-info-value">
+                        <span class="editable action-buttons" *ngIf="!editEmail">
+                          {{ profile.EMAIL }}
+                          <a href="javascript:void(0)" (click)="editEmail=!editEmail" title="" class="tooltip-info" data-title="คลิกเพื่อแก้ไข Email" data-target="#email-span">
+                            <i class="ace-icon fa fa-pencil-square-o blue bigger-90"></i>
+                          </a>
+                        </span>
+                         <span class="editable-container editable-inline" id="email-span" *ngIf="editEmail">
+                          <form #form="ngForm" (submit)="submitEmail(form.value)" class="form-inline editableform">
+                            <div class="control-group form-group">
+                              <div>
+                                <div [ngClass]="{ 'has-error': emailError }" class="editable-input form-add form-group has-feedback">
+                                  <input type="text" 
+                                    class="form-control css-require input-sm" 
+                                    placeholder="Email Address" 
+                                    id="Email" 
+                                    name="Email"
+                                    (focus)="emailError=undefined"
+                                    (blur)="checkEmail(Email)"
+                                    [focus]="isFocused"
+                                    [(ngModel)]="Email"
+                                  required />
+                                  <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="emailError">
+                                    {{ emailError }}
+                                  </span> 
+                                </div>
+                                <p></p>
+                                <div class="editable-buttons">
+                                  <button type="submit" class="btn btn-info editable-submit">
+                                    <i class="ace-icon fa fa-check"></i>
+                                  </button>
+                                  <button (click)="clickEditEmail()" type="button" class="btn editable-cancel">
+                                    <i class="ace-icon fa fa-times"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </span> 
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> ตำแหน่ง </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="age"> {{ profile.POSITION }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> ระดับ </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="age"> {{ profile.LEVEL }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> สถานที่ปฏิบัติงาน </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="login"> {{ profile.HOSPNAME }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> ตำบล </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="about"> {{ profile.TAMBON }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> อำเภอ </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="about"> {{ profile.AMPUR }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> จังหวัด </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="about"> {{ profile.CHANWAT }} </span>
+                      </div>
+                    </div>
+
+                    <div class="profile-info-row">
+                      <div class="profile-info-name"> สถานะ </div>
+                      <div class="profile-info-value">
+                        <span class="editable" id="age"> {{ profile.TYPE_PROFILE_NAME }} </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="space-20"></div>
+
+                  <div class="space-6"></div>
+
+                </div>
+              </div>
+            </div>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div>
+    </div>
+  </div>
+</div>

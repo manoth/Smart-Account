@@ -7,7 +7,7 @@ import * as CryptoJs from 'crypto-js';
 @Injectable()
 export class EncryptService {
 
-  encKey: string = '1234567890';
+  encKey: string = 'key';
 
   constructor(
     private http: Http

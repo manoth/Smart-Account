@@ -148,7 +148,7 @@ export class PersonalinformationComponent implements OnInit, AfterViewInit {
   checkTel(val) {
     if (val) {
       let phone = val.replace(/\D/g, '');
-      if (phone.length > 1 && ['06', '08', '09'].indexOf(phone.substring(0, 2)) == -1) {
+      if (phone.length < 10 || ['06', '08', '09'].indexOf(phone.substring(0, 2)) == -1) {
         this.telError = 'หมายเลขโทรศัพท์มือถือของคุณไม่ถูกต้อง';
       }
     } else {

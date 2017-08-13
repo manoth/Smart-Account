@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute, Params, Data } from '@angular/router';
 import { JwtHelper } from 'angular2-jwt';
 import { isWebUri } from 'valid-url';
@@ -35,20 +36,25 @@ import { OtherService } from '../service/other/other.service';
 })
 export class SigninComponent implements OnInit {
 
+  tokenExpired: boolean;
+  showLogin: boolean;
   loginForm: boolean = true;
   isFocused: boolean = true;
   username: string;
   password: string;
+  remember: boolean = false;
   arrAccount: any[];
   arrSysten: any[];
   qParams: string = 'ServiceLogin';
   hasErrorUser: string;
   hasErrorPass: string;
+  countSignin: number = 0;
 
   jwtHelper: JwtHelper = new JwtHelper();
 
   constructor(
     @Inject('MAIN_URL') private mainUrl: string,
+    private title: Title,
     private router: Router,
     private route: ActivatedRoute,
     private cookieService: CookieService,
@@ -56,7 +62,15 @@ export class SigninComponent implements OnInit {
     private encryptService: EncryptService,
     private otherService: OtherService
   ) {
-    this.otherService.checkToken();
+    let pageHeader = this.route.snapshot.data['pageHeader'];
+    this.title.setTitle(pageHeader);
+    try {
+      let localToken = localStorage.getItem('token');
+      this.tokenExpired = this.jwtHelper.isTokenExpired(localToken);
+      this.otherService.checkToken();
+    } catch (err) {
+      this.tokenExpired = true;
+    }
   }
 
   ngOnInit() {
@@ -76,6 +90,7 @@ export class SigninComponent implements OnInit {
       this.onUsername(username, objParams);
     } else {
       this.router.navigate(['/signin'], { queryParams: objParams });
+      this.showLogin = true;
     }
   }
 
@@ -106,6 +121,7 @@ export class SigninComponent implements OnInit {
         } else {
           this.hasErrorUser = data.data;
         }
+        this.showLogin = true;
       })
       .catch((error: any) => {
         console.log(error);
@@ -121,27 +137,26 @@ export class SigninComponent implements OnInit {
     } else {
       this.hasErrorPass = '*กรุณาป้อนรหัสผ่านของคุณ';
     }
+    this.countSignin++;
     document.getElementById('password').focus();
   }
 
   onSignin(password, remember) {
     let objData = {
+      cli: sessionStorage.getItem('cli'),
       username: localStorage.getItem('ACCOUNT'),
-      password: password
+      password: password,
+      remember: remember
     };
     let encData = this.encryptService.encrypt(JSON.stringify(objData));
     let path = 'signin/signin';
     this.mainService.postEncript(path, encData)
       .then((res: any) => {
         if (res.ok) {
+          // console.log(res);
           let token = res.token;
-          // if (remember) {
-            localStorage.setItem('token', token);
-          // } else {
-          //   this.cookieService.set('token', token);
-          // }
+          localStorage.setItem('token', token);
           this.otherService.checkToken();
-          // let decoded = this.jwtHelper.decodeToken(token);
         } else {
           this.password = null;
           this.hasErrorPass = res.data;

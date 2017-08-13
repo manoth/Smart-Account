@@ -118,7 +118,6 @@ export class WorkplaceinformationComponent implements OnInit {
       let data = this.dataFormPage;
       this.insetData(data);
     }
-    // this.nextPage.emit(1);
   }
 
   onPreviousPage() {
@@ -326,6 +325,7 @@ export class WorkplaceinformationComponent implements OnInit {
     let encData = this.encryptService.encrypt(JSON.stringify(data));
     this.mainService.postEncript(path, encData)
       .then((res: any) => {
+        // console.log(res);
         if (res.ok) {
           let router = this.router;
           swal({

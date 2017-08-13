@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { Router, ActivatedRoute } from '@angular/router';
+import { JwtHelper } from 'angular2-jwt';
 
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
 import swal from 'sweetalert2';
@@ -34,19 +36,32 @@ import { OtherService } from '../service/other/other.service';
 })
 export class ForgotComponent implements OnInit {
 
+  tokenExpired: boolean;
   arrSysten: any[];
   isFocused: boolean = true;
   loading: boolean = false;
   hasErrorCid: string;
   Cid: string;
 
+  jwtHelper: JwtHelper = new JwtHelper();
+
   constructor(
+    private title: Title,
     private mainService: MainService,
     private encryptService: EncryptService,
     private otherService: OtherService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
-    this.otherService.checkToken();
+    let pageHeader = this.route.snapshot.data['pageHeader'];
+    this.title.setTitle(pageHeader);
+    try {
+      let localToken = localStorage.getItem('token');
+      this.tokenExpired = this.jwtHelper.isTokenExpired(localToken);
+      this.otherService.checkToken();
+    } catch (err) {
+      this.tokenExpired = true;
+    }
    }
 
   ngOnInit() {
@@ -59,6 +74,7 @@ export class ForgotComponent implements OnInit {
       .catch((error: any) => {
         console.log(error);
       });
+    this.router.navigate(['/forgot'], { queryParams: { 'flowEntry': 'ServiceForgot' } });
   }
 
   submitForgot(form) {
@@ -81,6 +97,7 @@ export class ForgotComponent implements OnInit {
     let encData = this.encryptService.encrypt(JSON.stringify(objData));
     this.mainService.postEncript(path, encData)
       .then((data: any) => {
+        // console.log(data);
         this.loading = false;
         if (data.ok) {
           this.sweetAlert(data.email,1);
@@ -98,11 +115,11 @@ export class ForgotComponent implements OnInit {
     let router = this.router;
     if (id===1) {
       swal({
-        title: 'ยินดีด้วยด้วย!',
+        title: 'โปรดอ่านคำแนะนำ!',
         text: `เราได้ทำการส่งคำขอรีเซ็ตรหัสผ่านของคุณ 
           ไปยัง ${txt} เรียบร้อยแล้ว. \n
-          กรุณาไปเปิด E-mail ของคุณ \n 
-          หากต้องการเปลี่ยนที่อยู่ Email ใหม่ \n
+          กรุณาไปเปิด Email ของคุณ \n 
+          หากที่อยู่ Email ที่ส่งไปไม่ถูกต้อง \n
           กรุณาติดต่อ 044-836826 ต่อ 206.`,
         type: 'success',
         confirmButtonText: 'ตกลง',

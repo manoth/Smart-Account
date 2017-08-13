@@ -1,4 +1,4 @@
-<div [@flyInOut]="'in'">
+<div [@flyInOut]="'in'" *ngIf="tokenExpired">
     <div class="space-16"></div>
     <div class="col-sm-10 col-sm-offset-1">
         <div class="center">
@@ -23,21 +23,36 @@
                         <app-workplaceinformation (nextPage)="newPage($event)" [dataFormPage]="dataFormPage" *ngIf="signupPage==3"></app-workplaceinformation>
                     </div>
                 </div>
-                <!-- /.account-wall -->
-                <div>
-                    <div class="space-6"></div>
-                    <div class="center">
-                        <label>
-                            <a [routerLink]="['/signin']" [queryParams]="{flowEntry: 'ServiceLogin'}" class="user-signup-link green">
-                                <i class="ace-icon fa fa-user" aria-hidden="true"></i>
-                                กลับหน้าเข้าสู่ระบบ
-                            </a>
-                        </label>
-                    </div>
-                </div>
-                <app-footer></app-footer>
+                <!-- /.account-wall -->  
+                <div class="space-6"></div>              
             </div>
             <!-- /.position-relative -->
+        </div>
+        <pre>
+โปรดอ่าน!!! เงื่อนไขและข้อตกลงในการสร้างบัญชี Smart Account ของคุณ
+1. ผู้ที่สมัครสมาชิกจะต้องกรอกเลขบัตรประชาชนตามความเป็นจริง
+2. ผู้ที่สมัครสมาชิกจะตั้งรหัสผ่านได้เฉพาะ a-z,A-Z,0-9 และเครื่องหมายวรรคตอนทั่วไปเท่านั้น 
+3. ผู้ที่สมัครสมาชิกต้องกรอกข้อมูลที่เป็นจริงให้ครบทุกข้อ เพื่อสิทธิประโยชน์ของท่านในการเข้าร่วมกิจกรรมของเรา
+4. ผู้ที่จะสมัครสมาชิกใช้งานระบบนี้ได้ จะต้องเป็นเจ้าหน้าที่ภายใต้สำนักงานสาธารณสุขจังหวัดชัยภูมิ เท่านั้น
+5. ทางเราขอสงวนสิทธิ์ในการเปลี่ยนแปลงเงื่อยไขต่างๆ โดยที่ไม่ต้องแจ้งล่วงหน้าใดๆ ทั้งสิ้น
+6. หากมีข้อสงสัย หรือสมัครสมาชิกไม่ได้ ให้ติดต่อมาที่ 044-836826 ต่อ 102 ในเวลาราชการเท่านั้น
+
+ขอบคุณครับ
+        </pre>
+    </div>
+    <div>
+        <div class="center">
+            <label>
+                <a [routerLink]="['/signin']" [queryParams]="{flowEntry: 'ServiceLogin'}" class="user-signup-link green">
+                    <i class="ace-icon fa fa-user" aria-hidden="true"></i>
+                    กลับหน้าเข้าสู่ระบบ
+                </a>
+            </label>
+        </div>
+    </div>
+    <div class="login-container">
+        <div class="position-relative">
+            <app-footer></app-footer>
         </div>
     </div>
     <!-- /.col -->

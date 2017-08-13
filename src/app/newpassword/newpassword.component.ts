@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { trigger, state, style, animate, transition, keyframes } from '@angular/animations';
@@ -46,12 +47,15 @@ export class NewpasswordComponent implements OnInit {
   token: string;
 
   constructor(
+    private title: Title,
     private mainService: MainService,
     private encryptService: EncryptService,
     private otherService: OtherService,
     private router: Router,
     private route: ActivatedRoute
   ) { 
+    let pageHeader = this.route.snapshot.data['pageHeader'];
+    this.title.setTitle(pageHeader);
     this.otherService.checkToken();
   }
 
@@ -98,9 +102,13 @@ export class NewpasswordComponent implements OnInit {
               type: 'success',
               allowOutsideClick: false
             }).then(function () {
-              localStorage.removeItem('ACCOUNT');
+              // localStorage.removeItem('ACCOUNT');
+              sessionStorage.removeItem('token');
               router.navigate(['/signin'], { queryParams: { 'flowEntry': 'ServiceLogin' } });
             });
+          } else {
+            let txt = 'คุณหมดเวลาในการเปลี่ยนรหัสผ่านใหม่แล้ว กรุณากลับไปขั้นตอนลืมรหัสผ่านใหม่!';
+            this.sweetAlert(txt);
           }
         }).catch((err: any) => {
           console.log(err);

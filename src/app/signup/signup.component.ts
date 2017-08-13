@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute, Params, Data } from '@angular/router';
 import { JwtHelper } from 'angular2-jwt';
 import { isWebUri } from 'valid-url';
@@ -36,6 +37,7 @@ import { OtherService } from '../service/other/other.service';
 })
 export class SignupComponent implements OnInit {
 
+  tokenExpired: boolean;
   namePages: Array<object> = [
     { name: 'ข้อมูลการเข้าสู่ระบบ', icon: 'fa-sign-in', color: 'blue' },
     { name: 'ข้อมูลส่วนตัว', icon: 'fa-user', color: 'green' },
@@ -48,15 +50,25 @@ export class SignupComponent implements OnInit {
   jwtHelper: JwtHelper = new JwtHelper();
   constructor(
     @Inject('MAIN_URL') private mainUrl: string,
+    private title: Title,
     private router: Router,
     private route: ActivatedRoute,
     private mainService: MainService,
     private encryptService: EncryptService,
     private otherService: OtherService
   ) {
-    if (!this.otherService.checkToken()) {
-      this.router.navigate(['/signup'], { queryParams: { 'flowEntry': 'ServiceRegister' } });
-    }
+    let pageHeader = this.route.snapshot.data['pageHeader'];
+    this.title.setTitle(pageHeader);
+    try {
+      let localToken = localStorage.getItem('token');
+      this.tokenExpired = this.jwtHelper.isTokenExpired(localToken);
+      this.otherService.checkToken()
+    } catch (err) {
+      this.tokenExpired = true;
+    } 
+    // if (!this.otherService.checkToken()) {
+    //   this.router.navigate(['/signup'], { queryParams: { 'flowEntry': 'ServiceRegister' } });
+    // }
   }
 
   ngOnInit() {
@@ -69,6 +81,7 @@ export class SignupComponent implements OnInit {
       .catch((error: any) => {
         console.log(error);
       });
+    this.router.navigate(['/signup'], { queryParams: { 'flowEntry': 'ServiceRegister' } });
   }
 
   newPage(e) {

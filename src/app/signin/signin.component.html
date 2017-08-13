@@ -1,4 +1,4 @@
-<div [@flyInOut]="'in'">
+<div *ngIf="tokenExpired">
     <div class="space-12"></div>
     <div class="col-sm-10 col-sm-offset-1">
         <div class="center">
@@ -12,7 +12,7 @@
         </div>
         <div class="login-container">
             <div class="position-relative">
-                <div class="account-wall">
+                <div class="account-wall" *ngIf="showLogin">
                     <div class="form-signin" *ngIf="loginForm">
                         <form [@flyInOut]="'in'" #form="ngForm" (ngSubmit)="submitUser(form.value)">
                             <label class="block clearfix">
@@ -72,7 +72,14 @@
                                         <i class="ace-icon fa fa-lock"></i>
                                     </span>
                                     <span class="help-block col-xs-12 col-sm-reset inline" *ngIf="hasErrorPass">
-                                        {{ hasErrorPass }} 
+                                        <span>{{ hasErrorPass }}</span>
+                                        <span *ngIf="countSignin >= 3">
+                                            <br>
+                                            หากต้องการความช่วยเหลือเกี่ยวกับรหัสผ่าน 
+                                            <a [routerLink]="['/forgot']" [queryParams]="{flowEntry: 'ServiceForgot'}" class="blue">
+                                                คลิก!
+                                            </a>
+                                        </span>
                                     </span>
                                 </div>
                             </label>
@@ -85,8 +92,8 @@
                             <div class="space-6"></div>
                             <div>
                                 <label class="pull-left">
-                                    <input type="checkbox" class="ace" name="remember" ngModel>
-                                    <span class="lbl"> จดจำฉัน</span>
+                                    <input type="checkbox" class="ace" id="remember" name="remember" [(ngModel)]="remember">
+                                    <span class="lbl"> จดจำไว้ 30 วัน</span>
                                 </label>
                                 <label class="pull-right">
                                     <a [routerLink]="['/forgot']" [queryParams]="{flowEntry: 'ServiceForgot'}" class="red">

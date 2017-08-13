@@ -33,6 +33,7 @@ import { NewpasswordComponent } from './newpassword/newpassword.component';
 import { LogoComponent } from './share/logo/logo.component';
 import { FooterComponent } from './share/footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
+import { LogoutComponent } from './logout/logout.component';
 
 
 export function getAuthHttp(http) {
@@ -57,7 +58,8 @@ export function getAuthHttp(http) {
     NewpasswordComponent,
     LogoComponent,
     FooterComponent,
-    ProfileComponent
+    ProfileComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,
@@ -68,20 +70,21 @@ export function getAuthHttp(http) {
     BrowserAnimationsModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', redirectTo: 'signin', pathMatch: 'full' }, 
+      { path: '', redirectTo: 'signin', pathMatch: 'full' },
       { path: 'signin', component: SigninComponent, data: { pageHeader: 'ลงชื่อเข้าใช้ด้วยบัญชีของคุณ' } },
       { path: 'signup', component: SignupComponent, data: { pageHeader: 'สร้างบัญชีเพื่อเข้าใช้งานระบบ' } },
       { path: 'forgot', component: ForgotComponent, data: { pageHeader: 'ลืมรหัสผ่านในการเข้าใช้งาน' } },
       { path: 'newpassword', component: NewpasswordComponent, data: { pageHeader: 'ตั้งรหัสผ่านใหม่' } },
       { path: 'profile', component: ProfileComponent, data: { pageHeader: 'ข้อมูลส่วนตัว' } },
-      { path: '**', redirectTo: 'signin', pathMatch: 'full' }   
+      { path: 'logout', component: LogoutComponent, data: { pageHeader: 'กำลังออกจากระบบ' } },
+      { path: '**', redirectTo: 'signin', pathMatch: 'full' }
     ], { useHash: false }),
     FocusModule.forRoot()
   ],
   providers: [
     Title,
     CookieService,
-    { provide: 'API_URL', useValue: 'http://127.0.0.1:3000' },
+    { provide: 'API_URL', useValue: 'http://203.157.182.15:3000' },
     { provide: 'MAIN_URL', useValue: 'http://cpho.moph.go.th' },
     { provide: AuthHttp, useFactory: getAuthHttp, deps: [Http] },
     MainService,
